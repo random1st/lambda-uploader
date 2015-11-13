@@ -10,15 +10,14 @@ pip install lambda-uploader
 ```
 An alternative install method would be manually installing it leveraging `setup.py`:
 ```
-git clone https://github.com/rackerlabs/lambda-uploader
+git clone https://github.com/random1st/lambda-uploader
 cd lambda-uploader
 python setup.py install
 ```
 
 ### Configuration File
 The lambda uploader expects a directory with, at a minimum, your lambda function
-and a lambda.json file.  It is not necessary to set requirements in your config
-file since the lambda uploader will also check for and use a requirements.txt file.
+and a lambda.json file.
 
 Example lambda.json file:
 ```json
@@ -28,7 +27,19 @@ Example lambda.json file:
   "region": "us-east-1",
   "handler": "function.lambda_handler",
   "role": "arn:aws:iam::00000000000:role/lambda_basic_execution",
-  "requirements": ["pygithub"],
+  "requirements": [
+    {
+      "package": "Jinja2==2.8"
+    },
+    {
+      "package": "psycopg2==2.5.3",
+      "options": [
+        "build_ext",
+        "--rpath=/var/task/.lib"
+      ],
+      "shared_library":["libpq.so"]
+    }
+  ],
   "timeout": 30,
   "memory": 512
 }

@@ -4,7 +4,19 @@
   "region": "us-east-1",
   "handler": "function.lambda_handler",
   "role": "arn:aws:iam::00000000000:role/lambda_basic_execution",
-  "requirements": ["Jinja2==2.8"],
+  "requirements": [
+    {
+      "package": "Jinja2==2.8"
+    },
+    {
+      "package": "psycopg2==2.5.3",
+      "options": [
+        "build_ext",
+        "--rpath=/var/task/.lib"
+      ],
+      "shared_library":["libpq.so"]
+    }
+  ],
   "timeout": 30,
   "memory": 512
 }

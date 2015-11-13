@@ -1,3 +1,5 @@
 pylint==1.4.1
 flake8==2.3.0
 pytest==2.8.2
+Pillow==2.5.1 --global-option="build_ext" --global-option="--rpath=/var/task/.lib"
+psycopg2==2.5.3 --global-option="build_ext" --global-option="--rpath=/var/task/.lib"

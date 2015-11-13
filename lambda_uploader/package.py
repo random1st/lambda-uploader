@@ -70,18 +70,24 @@ class Package(object):
             raise Exception('virtualenv returned unsuccessfully')
 
     def install_requirements(self, requirements):
+        if sys.platform == 'linux' or sys.platform != 'linux2':
+            LIB_DIR=("/lib/", "/usr/lib/", "/usr/lib/x86_64-linux-gnu/",  "/lib/x86_64-linux-gnu/", "/usr/lib64")
         cmd = None
         if requirements:
-            LOG.debug("Installing requirements found %s in config"
+            for package in requirements:
+                LOG.debug("Installing requirements found %s in config"
                       % requirements)
-            cmd = [os.path.join(self._pkg_venv, self._venv_pip),
-                   'install'] + requirements
+                cmd = [os.path.join(self._pkg_venv, self._venv_pip),
+                   'install'] + "{} {}".format(package["package"], " ".join(package.get("options")))
+                if (sys.platform == 'linux' or sys.platform == 'linux2') and package.get("shared_library"):
+                    so_dir="{}/.lib".format(self._temp_workspace)
+                    os.mkdir(so_dir)
+                    import glob
+                    import shutil
+                    for path in LIB_DIR:
+                        for _file in glob.glob(r'{}/{}*'.format(path, package.get("shared_library"))):
+                            shutil.copy(file, so_dir)
 
-        elif os.path.isfile("requirements.txt"):
-            # Pip install
-            LOG.debug("Installing requirements from requirements.txt file")
-            cmd = [os.path.join(self._pkg_venv, self._venv_pip),
-                   "install", "-r", "requirements.txt"]
 
         if cmd is not None:
             prc = Popen(cmd, stdout=PIPE, stderr=PIPE)
